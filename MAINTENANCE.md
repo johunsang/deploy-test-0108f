@@ -4,6 +4,48 @@
 
 ---
 
+## 0단계: Claude Code 설치 (AI 도우미)
+
+> Claude Code를 설치하면 AI가 코드 수정을 도와줍니다!
+
+### Claude Code 설치
+
+1. https://claude.ai/claude-code 접속
+2. 운영체제에 맞는 설치 파일 다운로드
+3. 설치 후 실행
+
+### 프로젝트 열기
+
+터미널에서:
+```bash
+cd 내프로젝트폴더
+claude
+```
+
+### MCP 서버 설정 (AI 기능 확장)
+
+Claude Code에서 다음 명령어 실행:
+
+```bash
+# Context7 MCP 설치 (문서 검색 기능)
+claude mcp add context7 -- npx -y @upstash/context7-mcp
+```
+
+### Claude Code 사용법
+
+프로젝트 폴더에서 `claude` 실행 후:
+
+```
+> 메인 페이지 제목을 "우리 서비스"로 바꿔줘
+> 가격표에 새 플랜 추가해줘
+> 로그인 버튼 색상을 파란색으로 바꿔줘
+> 문의 폼 페이지 만들어줘
+```
+
+AI가 자동으로 코드를 수정해줍니다!
+
+---
+
 ## 1단계: 터미널 열기
 
 ### Mac에서 터미널 열기
