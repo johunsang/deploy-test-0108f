@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
 /**
@@ -16,7 +16,17 @@ export function useUser() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Supabase가 설정되지 않은 경우
+    if (!isSupabaseConfigured) {
+      setLoading(false)
+      return
+    }
+
     const supabase = createClient()
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
 
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user)

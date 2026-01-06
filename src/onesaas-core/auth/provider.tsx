@@ -7,13 +7,14 @@
  */
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { User, Session } from '@supabase/supabase-js'
 
 interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
+  isConfigured: boolean
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
@@ -28,7 +29,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Supabase가 설정되지 않은 경우 로딩만 해제
+    if (!isSupabaseConfigured) {
+      setLoading(false)
+      return
+    }
+
     const supabase = createClient()
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
 
     // 현재 세션 가져오기
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -51,23 +62,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     const supabase = createClient()
+    if (!supabase) return { error: new Error('Supabase not configured') }
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return { error }
   }
 
   const signUp = async (email: string, password: string) => {
     const supabase = createClient()
+    if (!supabase) return { error: new Error('Supabase not configured') }
     const { error } = await supabase.auth.signUp({ email, password })
     return { error }
   }
 
   const signOut = async () => {
     const supabase = createClient()
+    if (!supabase) return
     await supabase.auth.signOut()
   }
 
   const signInWithProvider = async (provider: 'google' | 'kakao' | 'github') => {
     const supabase = createClient()
+    if (!supabase) return
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -82,6 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         session,
         loading,
+        isConfigured: isSupabaseConfigured,
         signIn,
         signUp,
         signOut,
