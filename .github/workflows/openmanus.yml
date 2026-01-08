@@ -51,6 +51,9 @@ jobs:
           api_key = "${{ secrets.OPENAI_API_KEY }}"
           max_tokens = 8096
           temperature = 0.0
+
+          [daytona]
+          daytona_api_key = "not-used"
           EOF
 
       - name: Run OpenManus Task
